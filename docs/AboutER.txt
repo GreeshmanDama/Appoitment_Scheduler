@@ -1,0 +1,11 @@
+USER -> PATIENT: A user can have an optional patient profile.
+
+USER -> DOCTOR: A user can have an optional doctor profile.
+
+DOCTOR -> AVAILABILITY: A doctor defines multiple availability periods.
+
+PATIENT -> APPOINTMENT: A patient can book multiple appointments.
+
+DOCTOR -> APPOINTMENT: A doctor can handle multiple appointments.
+
+AVAILABILITY -> APPOINTMENT: An availability period can be associated with multiple appointments.

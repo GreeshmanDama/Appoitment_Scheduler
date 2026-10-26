@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^6.0.0",
+    "@reduxjs/toolkit": "^2.13.0",
+    "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-query": "^5.104.5",
     "axios": "^1.20.0",
     "date-fns": "^4.4.0",
@@ -18,7 +20,10 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.91.0",
+    "react-redux": "^9.3.0",
     "react-router-dom": "^7.18.4",
+    "redux": "^5.0.1",
+    "tailwindcss": "^4.3.3",
     "zod": "^4.6.7"
   },
   "devDependencies": {

@@ -1,0 +1,158 @@
+APPOINTMENT SCHEDULING SYSTEM
+DAY 1 — DEVELOPMENT SUMMARY
+Date: 26 October 2026
+
+============================================================
+1. PROJECT OVERVIEW
+============================================================
+
+I worked on the foundation of a clinic/appointment scheduling application.
+
+The system is being developed with a React + TypeScript frontend and an Express + TypeScript backend, using MongoDB/Mongoose for data storage. The frontend uses React Router for navigation, Redux Toolkit for authentication state, Axios for API requests, and Tailwind CSS with Lucide icons for the UI.
+
+The intended roles discussed so far are:
+- Patient
+- Doctor
+- Admin
+
+============================================================
+2. AUTHENTICATION BACKEND
+============================================================
+
+Registration controller:
+- Accepts name, email, password, and phone.
+- Validates required fields and minimum name/password lengths.
+- Normalizes the name and email.
+- Checks whether an account with the email already exists.
+- Hashes the password with bcrypt.
+- Creates a User with role "patient", authProvider "local", and isVerified true.
+- Creates a corresponding Patient record linked to the User.
+- Removes the newly created User if Patient record creation fails.
+- Generates a JWT and returns it along with the user details.
+- Handles duplicate-email errors and unexpected registration errors.
+
+Login controller:
+- Validates that email and password are strings.
+- Finds the user by normalized email and selects passwordHash.
+- Checks local authentication and verifies the password.
+- Supports an optional expected role for doctor/admin login portals.
+- Generates a JWT and returns the token and basic user details.
+
+JWT:
+- The token generator uses JWT_SECRET and signs a userId claim.
+- The configured token expiry is seven days.
+
+============================================================
+3. AUTHENTICATION MIDDLEWARE AND SESSION RESTORATION
+============================================================
+
+The protectedRoute middleware:
+- Reads the Authorization header.
+- Requires a Bearer token.
+- Verifies the JWT using JWT_SECRET.
+- Checks the decoded userId.
+- Finds the corresponding User in MongoDB.
+- Must assign the user to req.user before calling next().
+
+The /auth/me endpoint uses req.user to return the authenticated user's information.
+
+Frontend session restoration:
+- App.tsx requests /auth/me when the application starts.
+- It restores the authenticated user into Redux if the request succeeds.
+- It clears the user state if authentication fails.
+- Protected routes redirect unauthenticated users to /login.
+- Role-based dashboard routes are configured for patient, doctor, and admin access.
+
+Axios configuration:
+- The shared Axios instance uses VITE_BACKEND_URL as its base URL.
+- withCredentials is enabled.
+- A request interceptor reads localStorage key "token" and sends:
+    Authorization: Bearer <token>
+
+============================================================
+4. LOGOUT FUNCTIONALITY
+============================================================
+
+The patient dashboard already had a logout button that:
+- Removes localStorage key "token".
+- Dispatches clearUser() to clear Redux user state.
+- Navigates to /login using replace navigation.
+
+
+============================================================
+5. LOGIN PAGE
+============================================================
+
+A complete Login.tsx component was drafted with:
+- Email and password fields.
+- Show/hide password control.
+- Loading state while submitting.
+- Backend error messages.
+- Axios API submission.
+- JWT storage in localStorage.
+- Redux user-state update.
+- Role-based navigation to:
+    patient -> /patient/dashboard
+    doctor  -> /doctor/dashboard
+    admin   -> /admin/dashboard
+
+============================================================
+6. FRONTEND UI
+============================================================
+
+Patient dashboard:
+- Displays the user's first name.
+- Provides navigation to find doctors and view appointments (just gave navigations, Still has be implemented).
+- Displays name, email, role, and verification status.
+- Includes a logout button with a Lucide LogOut icon.
+- Uses Tailwind CSS for styling.
+
+============================================================
+7. ROUTES AND USER ROLES DISCUSSED
+============================================================
+
+The application includes or is being designed around:
+- Public/home page
+- Login and registration pages
+- Patient dashboard
+- Doctor dashboard
+- Admin dashboard
+- Unauthorized page
+- Not-found page
+- Protected routes that check the logged-in user and allowed role
+
+The admin-created doctor workflow still has to be implemented. The plan was to establish the User and Doctor models and registration/login foundation before implementing admin-created doctor accounts.
+
+============================================================
+8. IMPORTANT FIXES AND FOLLOW-UP TASKS
+============================================================
+
+Priority checklist:
+
+[ ] Confirm protectedRoute contains req.user = user.
+[ ] Confirm /auth/me succeeds with a valid Bearer token.
+[ ] Confirm registration stores the returned token in localStorage.
+[ ] Confirm login stores the returned token in localStorage.
+[ ] Confirm page reload restores the user and does not redirect unexpectedly.
+[ ] Choose whether logout is client-only or server-revoked.
+[ ] If using TokenBlacklist, create the model and check it in protectedRoute.
+[ ] Confirm POST /auth/logout is registered at the correct API path.
+[ ] Confirm the shared Axios import path in Login.tsx and dashboard components.
+[ ] Confirm Redux action names and user state types.
+[ ] Decide how user verification will work, since registration creates unverified users and login rejects them.
+[ ] Test patient, doctor, and admin role-based navigation.
+[ ] Ensure doctor/admin accounts are created through the intended authorized workflow rather than public patient registration.
+
+============================================================
+9. DAY 1 OUTCOME
+============================================================
+
+Day 1 focused on establishing and debugging the authentication foundation:
+- User registration and patient record creation.
+- Password hashing and JWT generation.
+- Login validation and role checks.
+- Protected routes and session restoration.
+- Redux provider and user-state handling.
+- Frontend login UI.
+- Logout design, including the difference between deleting a browser token and revoking it on the server.
+- Patient dashboard UI and a light session-restoration loader.
