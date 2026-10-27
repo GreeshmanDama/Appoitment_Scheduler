@@ -128,10 +128,14 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
+    console.log("finding user")
+    
     const user = await User.findOne({
       email: email.trim().toLowerCase(),
     }).select("+passwordHash");
-
+    
+    console.log("user found")
+    
     if (
       !user ||
       user.authProvider !== "local" ||
@@ -142,25 +146,28 @@ export const login = async (req: Request, res: Response) => {
         message: "Invalid email or password.",
       });
     }
-
+    
+    console.log("password is correct")
+    
     if (
       expectedRole &&
       user.role !== expectedRole
     ) {
       return res.status(403).json({
         success: false,
-        message: "This account cannot access this login portal.",
+        message: `You dont have access to this ${expectedRole} portal.`,
       });
     }
-
+    
     if (!user.isVerified) {
       return res.status(403).json({
         success: false,
         message: "Please verify your account first.",
       });
     }
-
+    
     const token = generateToken(user._id);
+    console.log("token generated")
 
     return res.status(200).json({
       success: true,

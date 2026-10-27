@@ -47,7 +47,6 @@ export const protectedRoute = async (
       });
     }
 
-    // Attach the authenticated user to the request.
     req.user = user;
 
     return next();

@@ -151,7 +151,6 @@ function Tagline({ className = "" }) {
   );
 }
 
-
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
@@ -164,10 +163,8 @@ function Home() {
           "'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif",
       }}
     >
-      {/* Fonts: Plus Jakarta Sans (UI) + Caveat (handwritten tagline) */}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');`}</style>
 
-      {/* ---------------------------- Navbar ---------------------------- */}
       <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 backdrop-blur">
         <nav className="mx-auto flex h-[66px] max-w-[1276px] items-center px-5 sm:px-8">
           <Link
@@ -187,9 +184,13 @@ function Home() {
               <NavItem
                 key={item.label}
                 item={item}
-                className={item.active
-                  ? "relative text-[13.5px] font-semibold text-[#0ea294] after:absolute after:-bottom-[7px] after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-[#0ea294]"
-                  : "text-[13.5px] font-medium text-slate-600 transition hover:text-[#0ea294]"} onClick={undefined}              />
+                className={
+                  item.active
+                    ? "relative text-[13.5px] font-semibold text-[#0ea294] after:absolute after:-bottom-[7px] after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-[#0ea294]"
+                    : "text-[13.5px] font-medium text-slate-600 transition hover:text-[#0ea294]"
+                }
+                onClick={undefined}
+              />
             ))}
           </div>
 
@@ -258,13 +259,11 @@ function Home() {
         id="home"
         className="relative overflow-hidden bg-gradient-to-r from-[#eaf3fc] via-[#f3f8fd] to-[#fafdff]"
       >
-        {/* pale blue blob peeking out behind the photo */}
         <div
           aria-hidden="true"
           className="absolute left-[48.2%] top-[43%] hidden h-[43%] w-[7%] -rotate-[12deg] rounded-[50%] bg-[#d3e6fa] lg:block"
         />
 
-        {/* photo (desktop) — pinned to the right edge with a rounded left side */}
         <div className="absolute inset-y-0 right-0 hidden w-[48.5%] lg:block">
           <img
             src={HERO_IMAGE}
@@ -347,8 +346,7 @@ function Home() {
                     {feature.title}
                   </h3>
                   <p className="mt-1.5 text-[12.5px] leading-5 text-slate-500">
-                    {feature.lines[0]}{" "}
-                    <br className="hidden sm:block" />
+                    {feature.lines[0]} <br className="hidden sm:block" />
                     {feature.lines[1]}
                   </p>
                 </div>
@@ -423,8 +421,10 @@ function Home() {
         </div>
       </section>
 
-      {/* ------------------------------ CTA ------------------------------ */}
-      <section id="contact" className="bg-[#1b3a5c] px-5 pb-6 pt-[21px] text-center">
+      <section
+        id="contact"
+        className="bg-[#1b3a5c] px-5 pb-6 pt-[21px] text-center"
+      >
         <h2 className="text-[17px] font-semibold leading-6 text-white">
           Your Health Journey Starts Here
         </h2>
@@ -445,6 +445,12 @@ function Home() {
           >
             Learn More
           </a>
+          <Link
+            to="/staff/login"
+            className="text-sm font-medium text-slate-100 transition hover:text-teal-600"
+          >
+            Staff Portal
+          </Link>
         </div>
       </section>
     </main>

@@ -18,6 +18,8 @@ import PatientDashboard from "./pages/dashboard/PatientDashboard";
 import DoctorDashboard from "./pages/dashboard/DoctorDashboard";
 import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import Doctors from "./pages/Doctors";
+import DoctorLogin from "./pages/login/DoctorLogin";
+import AdminLogin from "./pages/login/AdminLogin";
 
 function App() {
   const dispatch = useDispatch();
@@ -46,7 +48,6 @@ function App() {
             localStorage.removeItem("token");
           }
 
-          // Don't silently treat backend outages as a normal logout.
           if (axios.isAxiosError(error) && !error.response) {
             setSessionError(true);
           }
@@ -99,11 +100,14 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
 
       <Route element={<GuestOnly />}>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        <Route path="/staff/login" element={<DoctorLogin />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
       </Route>
 
       <Route path="/dashboard" element={<RoleRedirect />} />
