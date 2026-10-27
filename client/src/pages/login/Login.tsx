@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { HeartPulse, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 
@@ -22,21 +22,9 @@ interface LoginResponse {
   };
 }
 
-const dashboardRoutes: Record<UserRole, string> = {
-  patient: "/patient/dashboard",
-  doctor: "/doctor/dashboard",
-  admin: "/admin/dashboard",
-};
-
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { role: routeRole } = useParams<{ role: string }>();
-
-  const expectedRole: UserRole | undefined =
-    routeRole === "doctor" || routeRole === "admin"
-      ? routeRole
-      : undefined;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,11 +46,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const endpoint = expectedRole
-        ? `/auth/login/${expectedRole}`
-        : "/auth/login";
-
-      const response = await api.post<LoginResponse>(endpoint, {
+      const response = await api.post<LoginResponse>("/auth/login", {
         email: normalizedEmail,
         password,
       });
@@ -74,15 +58,8 @@ const Login = () => {
         return;
       }
 
-      if (expectedRole && data.user.role !== expectedRole) {
-        setError("This account cannot access this login portal.");
-        return;
-      }
-
-      // Persist the JWT for subsequent API requests and page reloads.
       localStorage.setItem("token", data?.token);
 
-      // Restore the authenticated user in Redux.
       dispatch(
         setUserData({
           ...data.user,
@@ -90,13 +67,10 @@ const Login = () => {
         }),
       );
 
-      // Navigate according to the authenticated user's role.
-      navigate(dashboardRoutes[data.user.role], { replace: true });
+      navigate("/patient/dashboard", { replace: true });
     } catch (err: unknown) {
       const message =
-        typeof err === "object" &&
-        err !== null &&
-        "response" in err
+        typeof err === "object" && err !== null && "response" in err
           ? (
               err as {
                 response?: {
@@ -135,20 +109,11 @@ const Login = () => {
             <p className="mt-2 text-sm text-gray-500">
               Sign in to continue to your CarePoint account.
             </p>
-
-            {expectedRole && (
-              <p className="mt-3 inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize">
-                {expectedRole} portal
-              </p>
-            )}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-medium"
-              >
+              <label htmlFor="email" className="mb-2 block text-sm font-medium">
                 Email address
               </label>
 
@@ -226,17 +191,15 @@ const Login = () => {
             </button>
           </form>
 
-          {!expectedRole && (
-            <p className="mt-6 text-center text-sm text-gray-500">
-              Don't have an account?{" "}
-              <Link
-                to="/register"
-                className="font-semibold text-gray-950 hover:underline"
-              >
-                Create account
-              </Link>
-            </p>
-          )}
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="font-semibold text-gray-950 hover:underline"
+            >
+              Create account
+            </Link>
+          </p>
         </div>
 
         <p className="mt-6 text-center text-xs text-gray-400">

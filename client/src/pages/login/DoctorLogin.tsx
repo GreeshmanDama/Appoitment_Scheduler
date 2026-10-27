@@ -1,8 +1,8 @@
 
-const DoctorLogin = () => {
-  return (
-    <div>DoctorLogin</div>
-  )
-}
+import StaffLoginPage from "./StaffLoginPage";
 
-export default DoctorLogin
+const DoctorLogin = () => {
+  return <StaffLoginPage role="doctor" />;
+};
+
+export default DoctorLogin;

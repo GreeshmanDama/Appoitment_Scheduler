@@ -6,9 +6,6 @@ export interface IDoctor extends Document {
   specialization: string;
   qualification: string;
   experienceYears: number;
-  licenceNumber: string;
-  consultationFee: number;
-  isVerified: boolean;
 }
 
 const doctorSchema = new Schema<IDoctor>(
@@ -48,23 +45,6 @@ const doctorSchema = new Schema<IDoctor>(
       required: true,
       min: 0,
       max: 60,
-    },
-
-    licenceNumber: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      uppercase: true,
-    },
-
-    consultationFee: {
-      type: Number
-    },
-
-    isVerified: {
-      type: Boolean,
-      default: false,
     },
   },
   {
